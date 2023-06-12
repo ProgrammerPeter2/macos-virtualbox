@@ -256,9 +256,9 @@ fi
 # wget supports --show-progress from version 1.16
 regex='1\.1[6-9]|1\.[2-9][0-9]'  # for zsh quoted regex compatibility
 if [[ "$(wget --version 2>/dev/null | head -n 1)" =~ ${regex} ]]; then
-    wgetargs="--quiet --continue --show-progress --timeout=60"  # pretty
+    wgetargs="--quiet --continue --show-progress --timeout=60 --no-check-certificate"  # pretty
 else
-    wgetargs="--continue"  # ugly
+    wgetargs="--continue --no-check-certificate"  # ugly
 fi
 
 # VirtualBox in ${PATH}
@@ -839,7 +839,7 @@ echo "/bootinst.sh=\"build_data/${vm_name}_bootinst.txt\"" >> "build_data/${vm_n
 # Assigning "physical" disks from largest to smallest to "${disks[]}" array
 # Partitioning largest disk as APFS
 # Partition second-largest disk as JHFS+
-echo '# this script is executed on the macOS virtual machine' > "${vm_name}_bootinst.txt"
+echo '# this script is executed on the macOS virtual machine' > "build_data/${vm_name}_bootinst.txt"
 echo 'disks="$(diskutil list | grep -o "\*[0-9][^ ]* [GTP]B *disk[0-9]$" | grep -o "[0-9].*")" && \
 disks="$(echo "${disks}" | sed -e "s/\.[0-9] T/000.0 G/" -e "s/\.[0-9] P/000000.0 G/" | sort -gr | grep -o disk[0-9] )" && \
 disks=(${disks[@]}) && \
@@ -858,12 +858,12 @@ if [ -s "${install_path}/InstallESD.dmg" ]; then \
 rm -f "${install_path}/InstallESD.dmg" ; fi && \
 for part in InstallESD.part*; do echo "Concatenating ${part}"; cat "${part}" >> "${install_path}/InstallESD.dmg"; done && \
 sed -i.bak -e "s/InstallESDDmg\.pkg/InstallESD.dmg/" -e "s/pkg\.InstallESDDmg/dmg.InstallESD/" "${install_path}InstallInfo.plist" && \
-sed -i.bak2 -e "/InstallESD\.dmg/{n;N;N;N;d;}" "${install_path}InstallInfo.plist" && \' >> "${vm_name}_bootinst.txt"
+sed -i.bak2 -e "/InstallESD\.dmg/{n;N;N;N;d;}" "${install_path}InstallInfo.plist" && \' >> "build_data/${vm_name}_bootinst.txt"
 # shut down the virtual machine
-echo 'shutdown -h now' >> "${vm_name}_bootinst.txt"
+echo 'shutdown -h now' >> "build_data/${vm_name}_bootinst.txt"
 if [[ -n $(
            2>&1 VBoxManage storageattach "${vm_name}" --storagectl SATA --port 4 \
-               --type dvddrive --medium "${vm_name}_populate_bootable_installer_virtual_disk.viso" >/dev/null
+               --type dvddrive --medium "build_data/${vm_name}_populate_bootable_installer_virtual_disk.viso" >/dev/null
           ) ]]; then echo "Could not attach \"${vm_name}_populate_bootable_installer_virtual_disk.viso\". Exiting."; exit; fi
 echo -e "\nStarting virtual machine \"${vm_name}\".
 This should take a couple of minutes. If booting fails, exit the script by

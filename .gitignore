@@ -1,1 +1,3 @@
 *.exe
+build_data/*
+*.bin
