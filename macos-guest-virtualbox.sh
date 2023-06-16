@@ -34,7 +34,7 @@ resolution="1280x800"            # VM display resolution
 # Assigning the following parameters is not required when installing or using macOS.
 
 DmiSystemFamily="MacBook Pro"          # Model Name
-DmiSystemProduct="MacBookPro11,2"      # Model Identifier
+DmiSystemProduct="MacBookPro16,1"      # Model Identifier
 DmiBIOSVersion="string:MBP7.89"        # Boot ROM Version
 DmiSystemSerial="NO_DEVICE_SN"         # Serial Number (system)
 DmiSystemUuid="CAFECAFE-CAFE-CAFE-CAFE-DECAFFDECAFF" # Hardware UUID
@@ -394,6 +394,7 @@ fi
 HighSierra_sucatalog='https://swscan.apple.com/content/catalogs/others/index-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog'
 Mojave_sucatalog='https://swscan.apple.com/content/catalogs/others/index-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog'
 Catalina_sucatalog='https://swscan.apple.com/content/catalogs/others/index-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog'
+Ventura_sucatalog='https://swscan.apple.com/content/catalogs/others/index-13-12-10.16-10.15-10.14-10.13-10.12-10.11-10.10-10.9-mountainlion-lion-snowleopard-leopard.merged-1.sucatalog'
 if [[ "${macOS_release_name:0:1}" =~ [Cc] ]]; then
     if [[ ! ( "${vbox_version:0:1}" -gt 6 ||
               "${vbox_version}" =~ ^6\.1\.[4-9] ||
@@ -416,6 +417,10 @@ elif [[ "${macOS_release_name:0:1}" =~ [Mm] ]]; then
     macOS_release_name="Mojave"
     CFBundleShortVersionString="10.14"
     sucatalog="${Mojave_sucatalog}"
+elif [[ "${macOS_release_name:0:1}" =~ [Vv] ]]; then
+    macOS_release_name="Ventura"
+    CFBundleShortVersionString="13"
+    sucatalog="${Ventura_sucatalog}"
 else
     echo "Can't parse macOS_release_name. Exiting."
     exit

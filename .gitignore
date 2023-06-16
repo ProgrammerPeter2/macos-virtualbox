@@ -2,3 +2,4 @@
 build_data/*
 *.bin
 results/*
+*.png
